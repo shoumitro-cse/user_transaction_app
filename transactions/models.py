@@ -5,6 +5,9 @@ from base.constants import OUTGOING, INCOMING
 
 
 class Transactions(BaseModel):
+    """
+    Here, we can store user transaction information and easily find out a user transaction.
+    """
 
     TRANSACTION_STATUS_CHOICES = (
         (OUTGOING, "OUTGOING"),
@@ -20,6 +23,6 @@ class Transactions(BaseModel):
 
     class Meta:
         unique_together = ["sender_user", "receiver_user"]
-        verbose_name = "Transactions"
+        verbose_name = "Transaction"
         verbose_name_plural = "Transactions"
 

@@ -3,6 +3,10 @@ from django.conf import settings
 
 
 class BaseModel(models.Model):
+    """
+    An abstract base class implements a fully featured to identify while a user
+    occurs any action like creating or updating a database table record.
+    """
 
     class Meta:
         abstract = True

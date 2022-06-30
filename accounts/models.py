@@ -15,6 +15,11 @@ class UnicodeUsernameValidator(validators.RegexValidator):
 
 
 class User(AbstractUser):
+    """
+    This class has a set of defined attributes (characteristics) and
+    methods (behaviors) that you can use to refer to multiple data items
+    as a single entity. also, we can store all users.
+    """
 
     username_validator = UnicodeUsernameValidator()
     username = models.CharField(
@@ -40,6 +45,9 @@ class User(AbstractUser):
 
 
 class UserProfile(models.Model):
+    """
+    Here, we can store user profile information separately.
+    """
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_profile")
     profile_image = models.ImageField(default='default.png', upload_to='images/profile/')
