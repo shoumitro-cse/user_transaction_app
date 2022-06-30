@@ -53,6 +53,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'user_transaction_app.urls'
+AUTH_USER_MODEL = "accounts.User"
 
 TEMPLATES = [
     {
