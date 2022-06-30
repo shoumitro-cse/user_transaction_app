@@ -49,7 +49,7 @@ class UserProfile(models.Model):
     Here, we can store user profile information separately.
     """
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_profile")
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     profile_image = models.ImageField(default='default.png', upload_to='images/profile/')
     bio = models.TextField(null=True, blank=True)
     dob = models.DateField(null=True, blank=True)

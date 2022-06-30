@@ -1,4 +1,4 @@
-"""user_transaction_app URL Configuration
+"""weather_advice_product_app URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.0/topics/http/urls/
@@ -14,8 +14,36 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView
+)
 
 urlpatterns = [
+
+    # for default admin panel
     path('admin/', admin.site.urls),
+
+    # add accounts urls
+    path('api/accounts/', include('accounts.urls')),
+
+    # # add weather urls
+    # path('api/', include('weather.urls')),
+
+    # Token authentication for API
+    path('api/token/', TokenObtainPairView.as_view(),
+         name='token_obtain_pair_api'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh_api'),
+
+    # for API docs
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/redocs/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+
 ]
