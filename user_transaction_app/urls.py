@@ -33,8 +33,8 @@ urlpatterns = [
     # add accounts urls
     path('api/accounts/', include('accounts.urls')),
 
-    # # add weather urls
-    # path('api/', include('weather.urls')),
+    # add transactions urls
+    path('api/', include('transactions.urls')),
 
     # Token authentication for API
     path('api/token/', TokenObtainPairView.as_view(),
