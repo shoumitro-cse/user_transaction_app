@@ -1,7 +1,6 @@
 from django.db import models
 from django.conf import settings
 from base.base_models import BaseModel
-from base.constants import OUTGOING, INCOMING
 
 
 class Transactions(BaseModel):

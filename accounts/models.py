@@ -1,11 +1,11 @@
 from decimal import Decimal
-
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core import validators
 from django.db.models import Sum
 from django.utils.deconstruct import deconstructible
 from django.utils.translation import gettext_lazy as _
+from transactions.models import Transactions
 
 
 @deconstructible
@@ -48,9 +48,10 @@ class User(AbstractUser):
 
     @property
     def get_balance_amount(self):
-        return Decimal(self.balance_amount) - \
-            Decimal(self.send_transactions.aggregate(totals=Sum('amount'))["totals"] or 0.0) + \
-            Decimal(self.received_transactions.aggregate(totals=Sum('amount'))["totals"] or 0.0)
+        data = self.__class__.objects.aggregate(received_total=Sum("send_transactions__amount"),
+                                                send_total=Sum("send_transactions__amount"))
+        return Decimal(self.balance_amount) - Decimal(data["send_total"] or 0.0) + \
+            Decimal(data["received_total"] or 0.0)
 
     @property
     def get_withdrawal_amount(self):
