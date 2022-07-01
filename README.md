@@ -1,4 +1,4 @@
-## user transaction app
+## User transaction app
 
 A user transaction application has been built using Python, JWT Token, Celery,
 Django, Django rest framework, and drf_spectacular package for API docs. 
@@ -44,7 +44,7 @@ port = 80, 8000 etc
 ```
 ![](https://github.com/shoumitro-cse/user_transaction_app/blob/main/docs/api_doc_image.png?raw=true)
 
-## Testing
+## Unit testing
 ```
 Here, A total of 18 (Eighteen)  unit test case has been added. also, you can run it separately. 
 Each testing class doc provides instructions on how to run it.
