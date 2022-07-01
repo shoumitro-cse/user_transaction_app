@@ -42,7 +42,10 @@ class TransactionsListCreateView(mixins.BaseTransactionsViewMixin,
         Create a transactions with validation.
         """
 
-        if self.request.user.id == request.data.get("receiver_user"):
+        if Decimal(request.data.get("amount")) < 0:
+            message = "The amount of transfer must be a positive value."
+            return Response({"error": message}, status=status.HTTP_400_BAD_REQUEST,)
+        elif self.request.user.id == request.data.get("receiver_user"):
             message = "The sender and the recipient can't be the same."
             return Response({"error": message}, status=status.HTTP_400_BAD_REQUEST,)
         elif self.request.user.get_balance_amount < Decimal(request.data.get("amount")):
