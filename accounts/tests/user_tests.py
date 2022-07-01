@@ -6,6 +6,11 @@ from accounts.models import User
 
 class UsersTests(BaseAPITestCase):
     """
+    It is used to test different types of units for a user that can be
+    used to test individual units for the smallest verifiable part of a
+    user such as a register, updating, partially updating, deleting,
+    listing, and finding a user.
+
     To run this test case:
     python manage.py test accounts.tests.user_tests.UsersTests
     """

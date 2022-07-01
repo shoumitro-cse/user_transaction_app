@@ -6,6 +6,11 @@ from accounts.models import User
 
 class UserProfileTests(BaseAPITestCase):
     """
+    It is used to test different types of units for a user profile that can be
+    used to test individual units for the smallest verifiable part of a
+    user profile such as creating, updating, partially updating, deleting,
+    and finding a user profile.
+
     To run this test case:
     python manage.py test accounts.tests.profile_tests.UserProfileTests
     """

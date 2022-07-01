@@ -6,6 +6,8 @@ from accounts.models import User
 
 class TokenTests(BaseAPITestCase):
     """
+    This unit test used to test jwt tokens.
+
     To run this test case:
     python manage.py test accounts.tests.token_tests.TokenTests
     """

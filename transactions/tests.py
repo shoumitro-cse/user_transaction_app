@@ -7,8 +7,12 @@ from transactions.models import Transactions
 
 
 class TransactionsTests(BaseAPITestCase):
-
     """
+    It is used to test different types of units for transactions that can be
+    used to test individual units for the smallest verifiable part of a
+    transaction such as creating, updating, partially updating, deleting,
+    listing, and finding a single transaction.
+
     To run this test case:
     python manage.py test transactions.tests.TransactionsTests
     """
