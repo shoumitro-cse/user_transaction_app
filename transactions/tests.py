@@ -32,7 +32,7 @@ class TransactionsTests(BaseAPITestCase):
         receiver_user = User.objects.create_user(username="01834129857", password="1111", balance_amount=1000)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.get_token_from_url(sender_user, "1111").get("access")}')
         transaction_data = {
-            "scheduled_date_time": "2022-07-01T18:26:22.683899+06:00",
+            "scheduled_date_time": "2022-07-01T18:42:59.683899+06:00",
             "amount": "100",
             "receiver_user": receiver_user.id
         }
@@ -91,7 +91,7 @@ class TransactionsTests(BaseAPITestCase):
         """
 
         user = User.objects.create_user(username="01834129857", password="1111", balance_amount=1000)
-        receiver_user = User.objects.create_user(username="01834129857", password="1111", balance_amount=1000)
+        receiver_user = User.objects.create_user(username="01834129827", password="1111", balance_amount=1000)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.get_token_from_url(user, "1111").get("access")}')
         transaction = Transactions.objects.create(sender_user=user, receiver_user=receiver_user, amount=10)
         response = self.client.delete(path=reverse('transaction_retrieve_update_delete', kwargs={'pk': transaction.id}))
