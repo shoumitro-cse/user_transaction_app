@@ -1,10 +1,12 @@
 from decimal import Decimal
-
+from django.utils.dateparse import parse_datetime
 from django.db.models import Q
 from rest_framework.response import Response
 from transactions import mixins
 from rest_framework import generics, status
 from transactions.models import Transactions
+from django.utils import timezone
+from .tasks import scheduled_create
 
 
 class TransactionsListCreateView(mixins.BaseTransactionsViewMixin,
@@ -17,22 +19,36 @@ class TransactionsListCreateView(mixins.BaseTransactionsViewMixin,
         <li> It performs create operation after sending a post request </li>
         <li> It gives a list of transactions after sending a get request.</li>
     </ul>
-    Here, the status argument value will be 1 or 2.
-    <pre>
-        OUTGOING = 1
-        INCOMING = 2
-    </pre>
     </div>
     """
 
+    def create_transaction(self, request, *args, **kwargs):
+        """
+        It is usually used to create transactions or to make a transaction at a scheduled time.
+        """
+        
+        scheduled_date_time = parse_datetime(request.data.get("scheduled_date_time"))
+        if scheduled_date_time > timezone.now():
+            data = {
+                "receiver_user_id": request.data["receiver_user"],
+                "amount": request.data["amount"],
+            }
+            scheduled_create.apply_async((data, self.request.user.id), eta=scheduled_date_time)
+            return Response({"data": "success"}, status=status.HTTP_201_CREATED, )
+        return super().create(request, *args, **kwargs)
+
     def create(self, request, *args, **kwargs):
+        """
+        Create a transactions with validation.
+        """
+
         if self.request.user.id == request.data.get("receiver_user"):
             message = "The sender and the recipient can't be the same."
             return Response({"error": message}, status=status.HTTP_400_BAD_REQUEST,)
         elif self.request.user.get_balance_amount < Decimal(request.data.get("amount")):
             message = "This transfer amount is too much more than the sender's balance amount."
             return Response({"error": message}, status=status.HTTP_400_BAD_REQUEST,)
-        return super().create(request, *args, **kwargs)
+        return self.create_transaction(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         serializer.save(sender_user=self.request.user)
@@ -60,6 +76,10 @@ class TransactionsUpdateDeleteDestroyView(mixins.BaseTransactionsViewMixin,
     """
 
     def update(self, request, *args, **kwargs):
+        """
+        Update a transaction with validation.
+        """
+
         balance_amount = self.request.user.get_balance_amount + Decimal(request.data.get("amount"))
         if balance_amount < 0:
             message = "Your balance is very low. it can't contain a negative value."

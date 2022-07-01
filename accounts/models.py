@@ -1,20 +1,10 @@
 from decimal import Decimal
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.core import validators
 from django.db.models import Sum
-from django.utils.deconstruct import deconstructible
 from django.utils.translation import gettext_lazy as _
 from transactions.models import Transactions
-
-
-@deconstructible
-class UnicodeUsernameValidator(validators.RegexValidator):
-    regex = r"^(?:(?:\+|00)88|01)?\d{11}$"
-    message = _(
-        "Enter a valid phone number. This value may contain only numbers."
-    )
-    flags = 0
+from base.validators import UnicodeUsernameValidator
 
 
 class User(AbstractUser):

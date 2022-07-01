@@ -1,9 +1,10 @@
 from transactions.models import Transactions
 from rest_framework import serializers
+from django.utils import timezone
 
 
 class TransactionsSerializer(serializers.ModelSerializer):
-    scheduled_date_time = serializers.DateTimeField(required=False)
+    scheduled_date_time = serializers.DateTimeField(required=False, default=timezone.now(), write_only=True)
 
     class Meta:
         model = Transactions
