@@ -1,6 +1,9 @@
+from decimal import Decimal
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core import validators
+from django.db.models import Sum
 from django.utils.deconstruct import deconstructible
 from django.utils.translation import gettext_lazy as _
 
@@ -42,6 +45,21 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+    @property
+    def get_balance_amount(self):
+        return Decimal(self.balance_amount) - \
+            Decimal(self.send_transactions.aggregate(totals=Sum('amount'))["totals"] or 0.0) + \
+            Decimal(self.received_transactions.aggregate(totals=Sum('amount'))["totals"] or 0.0)
+
+    @property
+    def get_withdrawal_amount(self):
+        return Decimal(self.send_transactions.aggregate(totals=Sum('amount'))["totals"] or 0.0)
+
+    @property
+    def get_deposit_amount(self):
+        return Decimal(self.balance_amount) + \
+               Decimal(self.received_transactions.aggregate(totals=Sum('amount'))["totals"] or 0.0)
 
 
 class UserProfile(models.Model):

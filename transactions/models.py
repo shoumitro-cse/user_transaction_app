@@ -9,16 +9,10 @@ class Transactions(BaseModel):
     Here, we can store user transaction information and easily find out a user transaction.
     """
 
-    TRANSACTION_STATUS_CHOICES = (
-        (OUTGOING, "OUTGOING"),
-        (INCOMING, "INCOMING"),
-    )
-
     sender_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                     related_name="send_transactions")
     receiver_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                       related_name="received_transactions")
-    status = models.PositiveSmallIntegerField(choices=TRANSACTION_STATUS_CHOICES)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:

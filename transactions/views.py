@@ -1,12 +1,11 @@
-import json
+from decimal import Decimal
 
 from django.db.models import Q
 from rest_framework.response import Response
-
 from transactions import mixins
 from rest_framework import generics, status
-
 from transactions.models import Transactions
+from django.conf import settings
 
 
 class TransactionsListCreateView(mixins.BaseTransactionsViewMixin,
@@ -28,8 +27,11 @@ class TransactionsListCreateView(mixins.BaseTransactionsViewMixin,
     """
 
     def create(self, request, *args, **kwargs):
-        message = "The sender and the recipient can't be the same."
         if self.request.user.id == request.data.get("receiver_user"):
+            message = "The sender and the recipient can't be the same."
+            return Response({"error": message}, status=status.HTTP_400_BAD_REQUEST,)
+        elif self.request.user.get_balance_amount < Decimal(request.data.get("amount")):
+            message = "This transfer amount is too much more than the sender's balance amount."
             return Response({"error": message}, status=status.HTTP_400_BAD_REQUEST,)
         return super().create(request, *args, **kwargs)
 

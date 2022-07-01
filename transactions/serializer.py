@@ -15,5 +15,8 @@ class TransactionsSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data.update({"status": str(instance.get_status_display()).capitalize()})
+        data.update({
+            "receiver_user": instance.receiver_user.get_full_name(),
+            "sender_user": instance.sender_user.get_full_name(),
+        })
         return data

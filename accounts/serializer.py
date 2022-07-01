@@ -11,6 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'username',
+            'balance_amount',
             'email',
             'password',
         ]
@@ -25,6 +26,13 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data.update({
+            "balance_amount": instance.get_balance_amount,
+        })
+        return data
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
