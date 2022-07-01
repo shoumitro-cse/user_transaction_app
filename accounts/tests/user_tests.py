@@ -11,11 +11,19 @@ class UsersTests(BaseAPITestCase):
     """
 
     def test_user_list(self):
+        """
+         Unit-testing to get list of users.
+        """
+
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.get_token_from_admin_user().get("access")}')
         response = self.client.get(path=reverse('create_list'))
         assert response.status_code == status.HTTP_200_OK
 
     def test_register_user(self):
+        """
+         Unit-testing to register a user.
+        """
+
         data = {
             "first_name": "John",
             "last_name": "doe",
@@ -28,6 +36,10 @@ class UsersTests(BaseAPITestCase):
         assert response.status_code == status.HTTP_201_CREATED
 
     def test_update_user(self):
+        """
+         Unit-testing to fully update a user.
+        """
+
         data = {
             "first_name": "John",
             "last_name": "doe",
@@ -43,6 +55,10 @@ class UsersTests(BaseAPITestCase):
         assert response.status_code == status.HTTP_200_OK
 
     def test_update_user_partially(self):
+        """
+         Unit-testing to partially update a user.
+        """
+
         data = {
           "first_name": "justine",
           "last_name": "doe",
@@ -54,12 +70,20 @@ class UsersTests(BaseAPITestCase):
         assert response.status_code == status.HTTP_200_OK
 
     def test_get_user(self):
+        """
+         Unit-testing to get a user.
+        """
+
         user = User.objects.create_user(username="01834129856", password="1111")
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.get_token_from_url(user, "1111").get("access")}')
         response = self.client.get(path=reverse('user_retrieve_update_delete', kwargs={'pk': user.id}))
         assert response.status_code == status.HTTP_200_OK
 
     def test_delete_user(self):
+        """
+        User delete unit testing
+        """
+
         user = User.objects.create_user(username="01834129856", password="1111")
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.get_token_from_url(user, "1111").get("access")}')
         response = self.client.delete(path=reverse('user_retrieve_update_delete', kwargs={'pk': user.id}))

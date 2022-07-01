@@ -11,6 +11,10 @@ class TokenTests(BaseAPITestCase):
     """
 
     def test_get_jwt_token(self):
+        """
+         Unit-testing to get jwt token.
+        """
+
         user = User.objects.create_superuser(username="01865432198", password="1111")
         response = self.client.post(path=reverse('token_obtain_pair_api'),
                                     data={'username': user.username, "password": '1111'},
