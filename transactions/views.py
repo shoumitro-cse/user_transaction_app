@@ -5,7 +5,6 @@ from rest_framework.response import Response
 from transactions import mixins
 from rest_framework import generics, status
 from transactions.models import Transactions
-from django.conf import settings
 
 
 class TransactionsListCreateView(mixins.BaseTransactionsViewMixin,
@@ -60,4 +59,9 @@ class TransactionsUpdateDeleteDestroyView(mixins.BaseTransactionsViewMixin,
     </div>
     """
 
-    pass
+    def update(self, request, *args, **kwargs):
+        balance_amount = self.request.user.get_balance_amount + Decimal(request.data.get("amount"))
+        if balance_amount < 0:
+            message = "Your balance is very low. it can't contain a negative value."
+            return Response({"error": message}, status=status.HTTP_400_BAD_REQUEST, )
+        return super().update(request, *args, **kwargs)
