@@ -1,0 +1,42 @@
+There are multiple ways to achieve this.
+
+
+1. Single Worker - Single Queue.
+celery -A my_app worker -l info  -c 2 -n my_worker
+This will start a worker which executes 2 tasks at the same time.
+
+
+
+2. Multiple workers - Single Queue.
+celery -A my_app worker -l info  -c 1 -n my_worker1
+celery -A my_app worker -l info  -c 1 -n my_worker2
+This will start two workers which executes one task at a time. Note both tasks are in the same queue.
+
+
+3. Multiple workers - Multiple Queues.
+celery -A my_app worker -l info  -c 1 -n my_worker1 -Q queue1
+celery -A my_app worker -l info  -c 1 -n my_worker2 -Q queue2
+
+This will start two workers which executes one task at a time. But here you have route the tasks accordingly.
+
+celery_app.send_task('tasks.test1', args=[self.id], kwargs={}, queue='queue1')
+celery_app.send_task('tasks.test2', args=[self.id], kwargs={}, queue='queue2')
+
+
+4. Single worker - All Queues
+celery -A my_app worker -l info -n my_worker1 
+If you don't mention any queue, it will consume from all queues by default.
+
+
+
+Call the worker with --autoscale option which would scale up and down processes as required.
+
+--autoscale AUTOSCALE
+                       Enable autoscaling by providing max_concurrency,
+                       min_concurrency. Example:: --autoscale=10,3 (always
+                       keep 3 processes, but grow to 10 if necessary)               
+example:
+celery -A my_app worker --autoscale=10,0 --loglevel=info 
+
+
+
