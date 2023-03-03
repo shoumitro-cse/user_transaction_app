@@ -3,6 +3,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from accounts.models import UserProfile
 from accounts import mixins
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.response import Response
+
 
 
 class UserListCreateView(mixins.BaseUserViewMixin,
@@ -88,3 +92,32 @@ class UserProfileUpdateDeleteDestroyView(mixins.BaseUserProfileViewMixin,
         return self.request.user.profile if hasattr(self.request.user, "profile") \
             else UserProfile.objects.create(user=self.request.user)
 
+
+## https://medium.com/django-rest/logout-django-rest-framework-eb1b53ac6d35
+class LogoutView(APIView):
+    permission_classes = (IsAuthenticated,)
+    #serializer_class = UserProfileSerializer
+
+    def post(self, request):
+        try:
+            print(request.data)
+            refresh_token = request.data["refresh_token"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+            
+            
+            
+class LogoutAllView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        tokens = OutstandingToken.objects.filter(user_id=request.user.id)
+        for token in tokens:
+            t, _ = BlacklistedToken.objects.get_or_create(token=token)
+
+        return Response(status=status.HTTP_205_RESET_CONTENT)
+        

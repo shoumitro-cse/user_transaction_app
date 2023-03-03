@@ -1,5 +1,7 @@
 There are multiple ways to achieve this.
 
+celery -A time_progress_task worker --help
+
 
 1. Single Worker - Single Queue.
 celery -A my_app worker -l info  -c 2 -n my_worker
@@ -31,6 +33,7 @@ If you don't mention any queue, it will consume from all queues by default.
 
 Call the worker with --autoscale option which would scale up and down processes as required.
 
+--autoscale <MIN WORKERS>, <MAX WORKERS>
 --autoscale AUTOSCALE
                        Enable autoscaling by providing max_concurrency,
                        min_concurrency. Example:: --autoscale=10,3 (always
@@ -39,4 +42,13 @@ example:
 celery -A my_app worker --autoscale=10,0 --loglevel=info 
 
 
+# dynamic queue
+Eg:  we have this command -
+celery worker -c 5 -Q document_scan
+
+We need a command to listen to a pattern of Queue - Something like this
+celery worker -c 5 -Q document_scan.*
+
+celery -A time_progress_task worker -l info -c 4 -Q progress.* --autoscale 1,10
+ 
 

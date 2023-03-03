@@ -3,7 +3,9 @@ from accounts.views import (
     UserUpdateDeleteDestroyView,
     UserListCreateView,
     UserProfileCreateView,
-    UserProfileUpdateDeleteDestroyView
+    UserProfileUpdateDeleteDestroyView,
+    LogoutView,
+    LogoutAllView,
 )
 
 urlpatterns = [
@@ -17,4 +19,7 @@ urlpatterns = [
     # This URL is used for a user to retrieve, partially or fully update and delete
     path('user/profile/', UserProfileUpdateDeleteDestroyView.as_view(),
          name='user_profile_retrieve_update_delete'),
+    
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('logout_all/', LogoutAllView.as_view(), name='auth_logout_all'),
 ]
